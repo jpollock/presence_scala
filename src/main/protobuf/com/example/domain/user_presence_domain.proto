@@ -11,5 +11,7 @@ option (akkaserverless.file).value_entity = {
 };
 
 message UserPresenceState {
-    bool is_online = 1;
+    string user_id = 1;
+    string device_id = 2;
+    bool is_online = 3;
 }

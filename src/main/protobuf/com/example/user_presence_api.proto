@@ -30,3 +30,29 @@ service PresenceService {
     rpc TogglePresence(TogglePresenceCommand) returns (google.protobuf.Empty);
     rpc GetCurrentUserPresence(GetUserPresenceCommand) returns (domain.UserPresenceState);
 }
+
+message ByUserIdRequest {
+    string user_id = 1;
+}
+  
+service PresenceQueryService {
+    option (akkaserverless.service) = {
+        type : SERVICE_TYPE_VIEW
+    };
+
+    rpc UpdateUser(domain.UserPresenceState) returns (domain.UserPresenceState) { 
+        option (akkaserverless.method).eventing.in = { 
+            value_entity: "user_presence"
+        };
+        option (akkaserverless.method).view.update = { 
+            table: "users"
+        };
+    }
+
+    rpc GetUser(ByUserIdRequest) returns (stream domain.UserPresenceState) { 
+        option (akkaserverless.method).view.query = { 
+            query: "SELECT * FROM users where user_id = :user_id"
+        };
+    }
+    
+}

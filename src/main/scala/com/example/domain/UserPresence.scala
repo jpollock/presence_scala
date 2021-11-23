@@ -15,7 +15,7 @@ class UserPresence(context: ValueEntityContext) extends AbstractUserPresence {
   override def emptyState: UserPresenceState = UserPresenceState()
 
   override def togglePresence(currentState: UserPresenceState, togglePresenceCommand: example.TogglePresenceCommand): ValueEntity.Effect[Empty] = {
-    val newState = currentState.copy(isOnline = togglePresenceCommand.isOnline) 
+    val newState = currentState.copy(userId = togglePresenceCommand.userId, deviceId = togglePresenceCommand.deviceId, isOnline = togglePresenceCommand.isOnline) 
     effects
       .updateState(newState) 
       .thenReply(Empty.defaultInstance) 
