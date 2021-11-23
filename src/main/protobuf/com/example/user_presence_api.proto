@@ -1,0 +1,32 @@
+// This is the public API offered by your entity.
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "akkaserverless/annotations.proto";
+import "google/api/annotations.proto";
+
+import "com/example/domain/user_presence_domain.proto";
+
+package com.example;
+
+message TogglePresenceCommand {
+    string user_id = 1 [(akkaserverless.field).entity_key = true];
+    string device_id = 2 [(akkaserverless.field).entity_key = true];
+    bool is_online = 3;
+}
+
+message GetUserPresenceCommand {
+    string user_id = 1 [(akkaserverless.field).entity_key = true];
+    string device_id = 2 [(akkaserverless.field).entity_key = true];
+
+}
+
+service PresenceService {
+    option (akkaserverless.service) = {
+        type : SERVICE_TYPE_ENTITY
+        component : "com.example.domain.UserPresence"
+    };
+
+    rpc TogglePresence(TogglePresenceCommand) returns (google.protobuf.Empty);
+    rpc GetCurrentUserPresence(GetUserPresenceCommand) returns (domain.UserPresenceState);
+}
